@@ -1,0 +1,71 @@
+====TASK
+
+  Write a command-line program that prints the number of lines spoken by each
+  character in the play 'MacBeth'.( to be found as XML file at
+  http://www.ibiblio.org/xml/examples/shakespeare/macbeth.xml )
+
+====ANALYSIS
+  After taking a look at the macbeth.xml, I could see that only the <SPEECH> tags
+  and their contents are interesting for this task. So I want to parse
+  the XML file into a ruby hash and then extract all speech keys and their contents.
+  Then iterate through them, count the <LINE> tags, get the <SPEAKER> key and fill
+  a hash with {speaker: count} pairs. Output said hash ordered by descending line
+  counts as formatted string at the end.
+
+====SETUP
+
+  First of all, we need to fetch the xml and place it somewhere in the project.
+  Since it does not include any logic, it should be placed somewhere else than
+  lib/ or bin/. I created a public/ folder for that purpose.
+
+  My debugging of choice is byebug, so I add that gem for now, but will remove it
+  from gemlist once im finished.
+
+  Fetching will be done via Fetcher gem( a Net::HTTP wrapper with nice output and
+  error handling, dont have to reinvent the wheel again ), added it to gemlist
+  and testrunning bin/setup succeeded.
+
+  Since fetching the file should not be part of testing, it has be done in setup.
+  So I created a fetch_file.rb with a simple command to copy it from the remote
+  source into the public folder and included that into setup file. Testrunning
+  succeeded and placed macbeth.xml into public folder.
+
+  After a while I figured out, that I dont have to use ruby at all for that and
+  wrote a curl command which also creates the directory. So no need for fetcher.
+  Simpler = better
+
+  Googling it, I found the gem xml-simple for the xml parsing, so I added it to
+  the gemfile. Testrunning bin/setup succeeded.
+  At first, I didnt wanted to take nokogiri, since it seemed like a overkill and
+  needs a lot time when installing the gem, but with the problems I encountered
+  later when I tried to fetch specific tags, I switched to Nokogiri.
+
+  Last but not least, I have to create the files to contain the actual logic. I
+  decided for 'count_lines' as file name and created the respective files.
+
+====CODING
+
+  Starting with count_lines_spec I first want to test the most basic thing: Is
+  the macbeth.xml file present? Next to test is the xml parsing. After writing the
+  test I start with functionality until said test turns green. Followed by tests
+  and method for extracting speakers from the nokogiri document and generating an
+  output.
+
+  I first tried extracting speakers from a hash, but they were nested very deep
+  into it. Destructuring it into various loops lead to quite ugly code, so I
+  decided to look for alternatives. So I found nokogiri, it's a standard gem for
+  rails, a lot of other gems I use are dependent of it, but I never used it myself.
+  So I was quite suprised how powerful that API actually is.
+
+  Finished the challenge by adding a few comments on not totally obvious pieces
+  of code, fixed the 'double name' bug and optimized the format of output.
+
+====CONCLUSION
+
+  It's funny that everytime I apply for a Rails job, I get pure Ruby Challenges
+  and each time I have to admit how bad I am at meta coding compared to my actual
+  Rails skills. Still it has been fun and educational for me and I'm satisfied
+  with the result. It's far from perfect, but that would take more time
+  and definitly go beyond the intended timebox.
+
+- Lennart Gerson, Ruby on Rails Developer, April 2019
