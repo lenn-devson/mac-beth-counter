@@ -8,7 +8,7 @@ Conditions:
 * Your solution should be tested, preferably via TDD. Running your tests should not download the play from the ibiblio.org server.
 * Some lines are attributed to a speaker called "ALL". Your program should ignore these.
 
-Also see [devlog](../devlog.txt) for implementation steps and thoughts
+Also see [devlog](devlog.txt) for implementation steps and thoughts
 
 Setup:
 
